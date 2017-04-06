@@ -1,4 +1,4 @@
-# tostty
+# toastty
 
 
 ```bash

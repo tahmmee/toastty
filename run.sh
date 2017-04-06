@@ -7,10 +7,10 @@ NUM_SERVERS=${NUM_SERVERS_ARG:-$DEFAULT_NUM_SERVERS}
 
 # parse build 
 DEFAULT_BUILD=5.0.0-2488
-BUILD_ARG=`echo $* | grep "build:" | sed 's/.*build:\([0-9]*\).*/\1/'`
+BUILD_ARG=`echo $* | grep "build:"  |  sed 's/.*build:\(.*\?\)/\1/' | awk '{print $1}'`
 BUILD=${BUILD_ARG:-$DEFAULT_BUILD}
 
-echo $NUM_SERVERS $DEFAULT_BUILD
+echo Servers: $NUM_SERVERS, Build: $BUILD
 
 TEMPLATE="$NUM_SERVERS-nodes-template.ini"
 if [ "$NUM_SERVERS" -le "1" ]; then

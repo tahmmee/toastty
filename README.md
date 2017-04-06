@@ -12,7 +12,7 @@ gotty -w -p 7021 --permit-arguments --title-format "ToastTY - {{ .Command }} ({{
 
 # Passing Args
 
-```
+```bash
 # 6 servers with build 5.0.0-2449
 http://localhost:7021/?arg=servers:6&arg=build:5.0.0-2449
 ```

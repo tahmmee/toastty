@@ -9,4 +9,4 @@ RUN go build
 COPY run.sh run.sh
 EXPOSE 80
 ENV PATH=$PATH:$GOPATH/bin
-ENTRYPOINT ["gotty", "-w", "-p", "80", "--permit-arguments", "./run.sh"]
+ENTRYPOINT ["gotty", "-w", "-p", "80", "--permit-arguments", "--title-format", "ToastTY - {{ .Command }} ({{ .Hostname }})", "./run.sh"]

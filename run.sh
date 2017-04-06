@@ -23,4 +23,4 @@ fi
 
 sed -i "s/build:.*/build: $BUILD/" providers/docker/options.yml
 echo ./sequoia -client $1 testrunner -command  "-i b/resources/$TEMPLATE -t tty" --exec
-./sequoia -client $1 testrunner -command  "-i b/resources/$TEMPLATE -t tty" --exec
+./sequoia testrunner -client $1 -command  "-i b/resources/$TEMPLATE -t tty" --exec

@@ -11,6 +11,7 @@ BUILD_ARG=`echo $* | grep "build:"  |  sed 's/.*build:\(.*\?\)/\1/' | awk '{prin
 BUILD=${BUILD_ARG:-$DEFAULT_BUILD}
 
 echo Servers: $NUM_SERVERS, Build: $BUILD
+echo "=================================="
 
 TEMPLATE="$NUM_SERVERS-nodes-template.ini"
 if [ "$NUM_SERVERS" -le "1" ]; then
@@ -22,5 +23,6 @@ if [ "$NUM_SERVERS" -gt "8" ]; then
 fi
 
 sed -i "s/build:.*/build: $BUILD/" providers/docker/options.yml
-echo ./sequoia -client $1 testrunner -command  "-i b/resources/$TEMPLATE -t tty" --exec
+sed -i -e "s/memory:.*/memory: 8000000000/" providers/docker/options.yml
+
 ./sequoia testrunner -client $1 -command  "-i b/resources/$TEMPLATE -t tty" --exec

@@ -11,10 +11,10 @@ gotty -w -p 7021 --permit-arguments --title-format "ToastTY - {{ .Command }} ({{
 ## Start a client session
 
 ```bash
-# defaults
+# open browser to the hosted url
 http://localhost:7021/
 
-# 6 servers with build 5.0.0-2449
+# you can provide arguments... ie, 6 servers with build 5.0.0-2449
 http://localhost:7021/?arg=servers:6&arg=build:5.0.0-2449
 
 # when presented with a tty - run a test!

@@ -14,7 +14,7 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
 
-import ToolBar from './ToolBar';
+import NavBar from './NavBar';
 import OrangeMuiTheme from './OrangeMuiTheme';
 import Iframe from 'react-iframe'
 
@@ -27,7 +27,7 @@ injectTapEventPlugin();
 
 const App = () => (
   <MuiThemeProvider muiTheme={OrangeMuiTheme}>
-    <ToolBar />
+    <NavBar />
   </MuiThemeProvider>
 );
 

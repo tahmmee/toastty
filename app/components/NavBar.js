@@ -1,14 +1,12 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import FlatButton from 'material-ui/FlatButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import IconButton from 'material-ui/IconButton';
-
-
+import AddIcon from 'material-ui/svg-icons/content/add';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class NavBar extends React.Component {
 
@@ -31,8 +29,13 @@ export default class NavBar extends React.Component {
 						open={this.state.open}
 						onRequestChange={(open) => this.setState({open})}
 					>
-						<MenuItem onTouchTap={this.handleToggle}>Menu Item</MenuItem>
-						<MenuItem onTouchTap={this.handleToggle}>Menu Item 2</MenuItem>
+
+    				<Divider />
+
+						<MenuItem onTouchTap={this.handleToggle}>SERVER</MenuItem>
+						<MenuItem onTouchTap={this.handleToggle}>SDK</MenuItem>
+						<MenuItem onTouchTap={this.handleToggle}>MOBILE</MenuItem>
+						<MenuItem onTouchTap={this.handleToggle}>PERF</MenuItem>
 					</Drawer>
 				</div>
 			);

@@ -16699,13 +16699,21 @@ var TestrunnerToolbar = function (_React$Component3) {
 
 		_this3.state = {
 			build: "5.0.0-2703",
-			servers: 2
+			toyBuild: "",
+			servers: 2,
+			platform: 1
 		};
 		_this3.onBuildChange = function (event, newValue) {
 			return _this3.setState({ build: newValue });
 		};
+		_this3.onToyBuildChange = function (event, newValue) {
+			return _this3.setState({ toyBuild: newValue });
+		};
 		_this3.onServerChange = function (event, index, value) {
 			return _this3.setState({ servers: value });
+		};
+		_this3.onPlatformChange = function (event, index, value) {
+			return _this3.setState({ platform: value });
 		};
 		_this3.handleStartSession = _this3.handleStartSession.bind(_this3);
 		return _this3;
@@ -16714,9 +16722,14 @@ var TestrunnerToolbar = function (_React$Component3) {
 	_createClass(TestrunnerToolbar, [{
 		key: 'handleStartSession',
 		value: function handleStartSession(event, index, value) {
-			var servers = this.state.servers * 2;
 			var build = this.state.build;
-			this.props.onStart(servers, build);
+			var toyBuild = this.state.toyBuild;
+			var servers = this.state.servers * 2;
+			var platformName = "centos7";
+			if (this.state.platform == 2) {
+				platformName = "ubuntu14";
+			}
+			this.props.onStart(servers, build, toyBuild, platformName);
 		}
 	}, {
 		key: 'render',
@@ -16736,7 +16749,16 @@ var TestrunnerToolbar = function (_React$Component3) {
 					}),
 					_react2.default.createElement(CountSelector, {
 						value: this.state.servers,
-						onChange: this.onServerChange })
+						onChange: this.onServerChange }),
+					_react2.default.createElement(PlatformSelector, {
+						value: this.state.platform,
+						onChange: this.onPlatformChange }),
+					_react2.default.createElement(_TextField2.default, {
+						floatingLabelFixed: true,
+						floatingLabelText: 'Toy Build',
+						hintText: 'http://spock-toy/...',
+						onChange: this.onToyBuildChange
+					})
 				),
 				_react2.default.createElement(
 					_Toolbar.ToolbarGroup,
@@ -16765,6 +16787,19 @@ var CountSelector = function CountSelector(props) {
 		_react2.default.createElement(_MenuItem2.default, { value: 2, primaryText: '4' }),
 		_react2.default.createElement(_MenuItem2.default, { value: 3, primaryText: '6' }),
 		_react2.default.createElement(_MenuItem2.default, { value: 4, primaryText: '8' })
+	);
+};
+
+var PlatformSelector = function PlatformSelector(props) {
+	return _react2.default.createElement(
+		_SelectField2.default,
+		{
+			floatingLabelText: 'Platform',
+			value: props.value,
+			onChange: props.onChange
+		},
+		_react2.default.createElement(_MenuItem2.default, { value: 1, primaryText: 'CentOS 7' }),
+		_react2.default.createElement(_MenuItem2.default, { value: 2, primaryText: 'Ubuntu 14.04' })
 	);
 };
 
@@ -16911,9 +16946,16 @@ var Container = function (_React$Component6) {
 		}
 	}, {
 		key: 'startSession',
-		value: function startSession(servers, build) {
+		value: function startSession(servers, build, toyBuild, platform) {
 			var session = this.getNewSession();
-			var url = "http://localhost:7021?arg=servers:" + servers + "&arg=build:" + build + "&arg=session:" + session;
+			var url = "http://localhost:7021?arg=servers:" + servers + "&arg=build:" + build + "&arg=platform:" + platform;
+			if (toyBuild != "") {
+				url = url + "&arg=build_override:" + toyBuild;
+			}
+			// session at end of url
+			url = url + "&arg=session:" + session;
+
+			console.log(url);
 			var cFrame = _react2.default.createElement(ReusableIframe, { url: url, id: session });
 			var ttyItem = {
 				frame: cFrame,

@@ -103,18 +103,27 @@ class TestrunnerToolbar extends React.Component {
     super(props);
 		this.state = {
 			build: "5.0.0-2703",
+			toyBuild: "",
 			servers: 2,
+			platform: 1,
 		};
   	this.onBuildChange = (event, newValue) => this.setState({build: newValue});
+  	this.onToyBuildChange = (event, newValue) => this.setState({toyBuild: newValue});
   	this.onServerChange = (event, index, value) => this.setState({servers: value});
+  	this.onPlatformChange = (event, index, value) => this.setState({platform: value});
 		this.handleStartSession = this.handleStartSession.bind(this)
 	}
 
 
 	handleStartSession(event, index, value){
-		var servers = this.state.servers * 2
 		var build = this.state.build
-		this.props.onStart(servers, build)
+		var toyBuild = this.state.toyBuild
+		var servers = this.state.servers * 2
+		var platformName = "centos7"
+		if (this.state.platform == 2){
+			platformName = "ubuntu14"
+		}
+		this.props.onStart(servers, build, toyBuild, platformName)
 	}
 
 
@@ -132,6 +141,15 @@ class TestrunnerToolbar extends React.Component {
 					<CountSelector
 						value={this.state.servers}
 						onChange={this.onServerChange} />
+					<PlatformSelector
+						value={this.state.platform}
+						onChange={this.onPlatformChange} />
+					<TextField
+      			floatingLabelFixed={true}
+						floatingLabelText="Toy Build"
+						hintText="http://spock-toy/..."
+						onChange={this.onToyBuildChange}
+					/>
 				</ToolbarGroup>
 				<ToolbarGroup>
 					<RaisedButton
@@ -157,7 +175,16 @@ const CountSelector = (props) => (
 	</SelectField>
 );
 
-
+const PlatformSelector = (props) => (
+	<SelectField
+		floatingLabelText="Platform"
+		value={props.value}
+		onChange={props.onChange}
+	>
+	<MenuItem value={1} primaryText="CentOS 7" />
+	<MenuItem value={2} primaryText="Ubuntu 14.04" />
+	</SelectField>
+);
 
 class ConsoleCard extends React.Component {
 	constructor (props) {
@@ -261,9 +288,16 @@ class Container extends React.Component {
 		return (Math.random()*1e32).toString(36)
 	}
 
-	startSession(servers, build){
+	startSession(servers, build, toyBuild, platform){
 		var session = this.getNewSession()
-		var url = "http://localhost:7021?arg=servers:"+servers+"&arg=build:"+build+"&arg=session:"+session
+		var url = "http://localhost:7021?arg=servers:"+servers+"&arg=build:"+build+"&arg=platform:"+platform
+		if (toyBuild != ""){
+			url = url+"&arg=build_override:"+toyBuild
+		}
+		// session at end of url
+		url=url+"&arg=session:"+session
+
+		console.log(url)
 		var cFrame = <ReusableIframe url={url} id={session} />
 		var ttyItem = {
 			frame: cFrame,

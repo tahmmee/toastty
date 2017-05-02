@@ -12,6 +12,7 @@
     "material-ui": "^0.17.4",
     "material-ui-fullscreen-dialog": "^0.3.1",
     "react": "^15.5.4",
+    "react-copy-to-clipboard": "^5.0.0",
     "react-dom": "^15.5.4",
     "react-iframe": "^1.0.5",
     "react-tap-event-plugin": "^2.0.1",

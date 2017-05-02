@@ -5,9 +5,12 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton'
 import FullscreenDialog from 'material-ui-fullscreen-dialog'
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import CopyIcon from 'material-ui/svg-icons/content/link';
+import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
 
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
@@ -17,6 +20,7 @@ import Iframe from 'react-iframe'
 import NavBar from './NavBar';
 import OrangeMuiTheme from './OrangeMuiTheme';
 import FullScreen from 'react-fullscreen';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 const muiTheme = OrangeMuiTheme;
 // Needed for onTouchTap
@@ -190,7 +194,8 @@ class ConsoleCard extends React.Component {
 	constructor (props) {
     super(props)
     this.state = {
-      open: true 
+      open: true,
+			copied: false,
     }
   	this.handleExpandChange = this.handleExpandChange.bind(this);
   };
@@ -214,10 +219,24 @@ class ConsoleCard extends React.Component {
 					{cardMedia}
 				</CardMedia>
 				<CardActions
-					actAsExpander={true} showExpandableButton={true} >
-					<FlatButton onTouchTap={this.props.onTouchExit}
+					actAsExpander={true} showExpandableButton={true} > 
+					<FlatButton 
+								icon={<ExitIcon />}
+								onTouchTap={this.props.onTouchExit}
 											label="Exit" />
+					<CopyToClipboard text={this.props.mediaUrl}
+          	onCopy={() => this.setState({copied: true})}>
+						<FlatButton
+								icon={<CopyIcon />}
+								onTouchTap={(e) => e.stopPropagation()} label="Copy" />
+					</CopyToClipboard>
 				</CardActions>
+				<Snackbar
+          open={this.state.copied}
+          message="Copied to your clipboard"
+          autoHideDuration={4000}
+          onRequestClose={() => this.setState({copied: false})}
+        />
 			</Card>
 		);
 	};

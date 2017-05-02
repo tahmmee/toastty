@@ -16847,6 +16847,10 @@ var _exitToApp = __webpack_require__(479);
 
 var _exitToApp2 = _interopRequireDefault(_exitToApp);
 
+var _refresh = __webpack_require__(484);
+
+var _refresh2 = _interopRequireDefault(_refresh);
+
 var _SelectField = __webpack_require__(197);
 
 var _SelectField2 = _interopRequireDefault(_SelectField);
@@ -17180,7 +17184,11 @@ var ConsoleCard = function (_React$Component4) {
 							onTouchTap: function onTouchTap(e) {
 								return e.stopPropagation();
 							}, label: 'Copy' })
-					)
+					),
+					_react2.default.createElement(_FlatButton2.default, {
+						icon: _react2.default.createElement(_refresh2.default, null),
+						onTouchTap: this.props.onTapRefresh,
+						label: 'Refresh' })
 				),
 				_react2.default.createElement(_Snackbar2.default, {
 					open: this.state.copied,
@@ -17215,7 +17223,6 @@ var TTYSessionTabs = function (_React$Component5) {
 
 			// filter out closed sessions
 			var ttys = this.props.ttys;
-
 			var hiddenButtonStyle = { width: "0px" };
 			if (ttys.length == 1) {
 				// hide tab button on first tty
@@ -17229,11 +17236,12 @@ var TTYSessionTabs = function (_React$Component5) {
 						buttonStyle: tabButtonStyle,
 						key: cFrameItem.session,
 						value: cFrameItem.session,
-						label: cFrameItem.build },
+						label: ttys.length == 1 ? "" : cFrameItem.build },
 					_react2.default.createElement(ConsoleCard, { media: cFrameItem.frame,
 						mediaUrl: cFrameItem.url,
 						session: cFrameItem.session,
-						onTouchExit: _this7.props.onTouchExit })
+						onTouchExit: _this7.props.onTouchExit,
+						onTapRefresh: _this7.props.onTapRefresh })
 				);
 			});
 
@@ -17273,10 +17281,41 @@ var Container = function (_React$Component6) {
 		_this8.handleChangeSession = function (value) {
 			return _this8.setState({ activeSession: value });
 		};
+		_this8.handleTapRefresh = _this8.handleTapRefresh.bind(_this8);
+		_this8.getActiveTabIndex = _this8.getActiveTabIndex.bind(_this8);
 		return _this8;
 	}
 
 	_createClass(Container, [{
+		key: 'getActiveTabIndex',
+		value: function getActiveTabIndex() {
+			var tabIndex = 0;
+			var activeSession = this.state.activeSession;
+			this.state.ttySessions.map(function (tty, i) {
+				if (tty.session == activeSession) {
+					tabIndex = i;
+				}
+			});
+			return tabIndex;
+		}
+	}, {
+		key: 'handleTapRefresh',
+		value: function handleTapRefresh(event) {
+			event.stopPropagation();
+
+			// make a new frame for item
+			var tabIndex = this.getActiveTabIndex();
+			var ttySession = this.state.ttySessions[tabIndex];
+			var refreshId = this.getNewSession();
+			var url = ttySession.url + "&refresh=" + refreshId;
+			console.log(url);
+			var newFrame = _react2.default.createElement(ReusableIframe, { url: url, id: ttySession.session });
+			this.setState(function (state) {
+				state.ttySessions[tabIndex].frame = newFrame;
+				return { ttySessions: state.ttySessions };
+			});
+		}
+	}, {
 		key: 'getNewSession',
 		value: function getNewSession() {
 			return (Math.random() * 1e32).toString(36);
@@ -17313,17 +17352,10 @@ var Container = function (_React$Component6) {
 			event.stopPropagation();
 
 			// get tab to remove
-			var tabIndex = 0;
-			var activeSession = this.state.activeSession;
-			this.state.ttySessions.map(function (tty, i) {
-				if (tty.session == activeSession) {
-					tabIndex = i;
-				}
-			});
+			var tabIndex = this.getActiveTabIndex();
 
 			// determine tab section to display after tab removed
 			var nextActiveSession = "";
-			console.l;
 			if (this.state.ttySessions.length > 1) {
 				if (tabIndex == 0) {
 					// next tab
@@ -17355,7 +17387,8 @@ var Container = function (_React$Component6) {
 						ttys: this.state.ttySessions,
 						session: this.state.activeSession,
 						onChange: this.handleChangeSession,
-						onTouchExit: this.handleDeleteTab
+						onTouchExit: this.handleDeleteTab,
+						onTapRefresh: this.handleTapRefresh
 					})
 				)
 			);
@@ -49701,6 +49734,44 @@ function withWidth() {
     }(_react.Component);
   };
 }
+
+/***/ }),
+/* 484 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _pure = __webpack_require__(31);
+
+var _pure2 = _interopRequireDefault(_pure);
+
+var _SvgIcon = __webpack_require__(29);
+
+var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NavigationRefresh = function NavigationRefresh(props) {
+  return _react2.default.createElement(
+    _SvgIcon2.default,
+    props,
+    _react2.default.createElement('path', { d: 'M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z' })
+  );
+};
+NavigationRefresh = (0, _pure2.default)(NavigationRefresh);
+NavigationRefresh.displayName = 'NavigationRefresh';
+NavigationRefresh.muiName = 'SvgIcon';
+
+exports.default = NavigationRefresh;
 
 /***/ })
 /******/ ]);

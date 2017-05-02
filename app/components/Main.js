@@ -7,6 +7,7 @@ import FullscreenDialog from 'material-ui-fullscreen-dialog'
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import CopyIcon from 'material-ui/svg-icons/content/link';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
+import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
@@ -230,6 +231,10 @@ class ConsoleCard extends React.Component {
 								icon={<CopyIcon />}
 								onTouchTap={(e) => e.stopPropagation()} label="Copy" />
 					</CopyToClipboard>
+					<FlatButton
+							icon={<RefreshIcon />}
+							onTouchTap={this.props.onTapRefresh}
+							label="Refresh" />
 				</CardActions>
 				<Snackbar
           open={this.state.copied}
@@ -253,7 +258,6 @@ class TTYSessionTabs extends React.Component {
 
 		// filter out closed sessions
 		var ttys = this.props.ttys
-
 		var hiddenButtonStyle = { width: "0px"};
 		if (ttys.length == 1) {
 				// hide tab button on first tty
@@ -265,11 +269,12 @@ class TTYSessionTabs extends React.Component {
 					buttonStyle={tabButtonStyle}
 					key={cFrameItem.session}
 					value={cFrameItem.session}
-					label={cFrameItem.build}>
+					label={ttys.length == 1 ? "" : cFrameItem.build}>
 						<ConsoleCard media={cFrameItem.frame}
 												 mediaUrl={cFrameItem.url}
 												 session={cFrameItem.session}
-												 onTouchExit={this.props.onTouchExit}/>
+												 onTouchExit={this.props.onTouchExit}
+												 onTapRefresh={this.props.onTapRefresh}/>
 				</Tab>
 		);
 
@@ -301,7 +306,36 @@ class Container extends React.Component {
 		this.getNewSession = this.getNewSession.bind(this);
 		this.handleDeleteTab = this.handleDeleteTab.bind(this);
   	this.handleChangeSession = (value) => this.setState({activeSession: value});
+  	this.handleTapRefresh = this.handleTapRefresh.bind(this);
+  	this.getActiveTabIndex = this.getActiveTabIndex.bind(this);
   }
+
+	getActiveTabIndex(){
+		var tabIndex = 0
+		var activeSession = this.state.activeSession
+		this.state.ttySessions.map(function(tty, i){
+			if(tty.session == activeSession){
+				tabIndex = i;
+			}
+		})
+		return tabIndex
+	}
+
+	handleTapRefresh(event){
+		event.stopPropagation()
+
+		// make a new frame for item
+		var tabIndex = this.getActiveTabIndex()
+		var ttySession = this.state.ttySessions[tabIndex]
+		var refreshId = this.getNewSession()
+		var url = ttySession.url+"&refresh="+refreshId
+		console.log(url)
+		var newFrame = <ReusableIframe url={url} id={ttySession.session} />
+		this.setState(state => {
+				state.ttySessions[tabIndex].frame = newFrame;
+				return {ttySessions: state.ttySessions};
+		});
+	}
 
 	getNewSession(){
 		return (Math.random()*1e32).toString(36)
@@ -336,17 +370,10 @@ class Container extends React.Component {
  		event.stopPropagation();
 		
 		// get tab to remove
-		var tabIndex = 0
-		var activeSession = this.state.activeSession
-		this.state.ttySessions.map(function(tty, i){
-			if(tty.session == activeSession){
-				tabIndex = i;
-			}
-		})
+		var tabIndex = this.getActiveTabIndex() 
 
 		// determine tab section to display after tab removed
 		var nextActiveSession = ""
-		console.l
 		if (this.state.ttySessions.length > 1){
 			if (tabIndex == 0){
 				// next tab
@@ -376,6 +403,7 @@ class Container extends React.Component {
 							session = {this.state.activeSession}
 							onChange = {this.handleChangeSession}
 							onTouchExit = {this.handleDeleteTab}
+							onTapRefresh = {this.handleTapRefresh}
 							/>
 					</div>
 				</MuiThemeProvider>

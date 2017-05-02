@@ -30,15 +30,18 @@ ports=$(grep "running for client" /tmp/gotty.log  | sed 's/.*\]://' | awk '{prin
 for port in $( echo $ports ); do
 
 	is_connected=$(netstat -n | grep 7021 | grep $port)
-
 	if [ -z "$is_connected" ]; then # may be dangling connection
 
 		# get session
 		pid=$(grep $port /tmp/gotty.log  | grep PID | sed 's/.*PID//' | awk '{print $1}')
 		session=$(cat /tmp/$pid)
 
-		# cleanup if tmux session exists
-		tmux ls | grep $session && cleanup_session $session
+		# only clean up if this is a single client session (ie. outside of ui)
+		nclients=$(grep $session /tmp/gotty.log  |wc -l)
+		if [ $nclients -le 1 ]; then
+			# cleanup if tmux session exists
+			tmux ls | grep $session && cleanup_session $session
+		fi
 	fi
 
 done
@@ -52,11 +55,6 @@ for port in $( echo $ports ); do
 	session=$(cat /tmp/$pid)
 	cleanup_session $session
 
-	# look for in logs 
-	#session=$(grep $port /tmp/gotty.log | grep session | head -1 | sed 's/.*session://' | sed 's/".*//')
-	#if [ -z "$session" ]; then
-	#	exit 0 # no session
-	#fi
 done
 
 

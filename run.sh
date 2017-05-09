@@ -35,7 +35,7 @@ fi
 
 sed -i "s/build:.*/build: $BUILD/" providers/docker/options.yml
 sed -i -e "s/memory:.*/memory: 8000000000/" providers/docker/options.yml
-sed -i "s/platform:.*/platform: $PLATFORM/" providers/docker/options.yml
+sed -i "s/os:.*/os: $PLATFORM/" providers/docker/options.yml
 if [ -n "$BUILD_OVERRIDE" ]; then
   sed -i "s|build_url_override:.*|build_url_override: $BUILD_OVERRIDE|" providers/docker/options.yml
 fi

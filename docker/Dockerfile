@@ -21,6 +21,6 @@ RUN add-apt-repository \
    stable"
 RUN apt-get update 
 RUN apt-get install -y docker-ce
-
+RUN apt-get install -y vim
 COPY run.sh run.sh
 ENTRYPOINT ["./run.sh"]

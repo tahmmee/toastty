@@ -23,6 +23,8 @@ import OrangeMuiTheme from './OrangeMuiTheme';
 import FullScreen from 'react-fullscreen';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
+var Config = require('Config')
+
 const muiTheme = OrangeMuiTheme;
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -329,7 +331,6 @@ class Container extends React.Component {
 		var ttySession = this.state.ttySessions[tabIndex]
 		var refreshId = this.getNewSession()
 		var url = ttySession.url+"&refresh="+refreshId
-		console.log(url)
 		var newFrame = <ReusableIframe url={url} id={ttySession.session} />
 		this.setState(state => {
 				state.ttySessions[tabIndex].frame = newFrame;
@@ -343,7 +344,7 @@ class Container extends React.Component {
 
 	startSession(servers, build, toyBuild, platform){
 		var session = this.getNewSession()
-		var url = "http://localhost:7021?arg=servers:"+servers+"&arg=build:"+build+"&arg=platform:"+platform
+		var url = "http://"+Config.gottyHost+"?arg=servers:"+servers+"&arg=build:"+build+"&arg=platform:"+platform
 		if (toyBuild != ""){
 			url = url+"&arg=build_override:"+toyBuild
 		}

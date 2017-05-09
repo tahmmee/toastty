@@ -12,5 +12,8 @@ module.exports = {
 				presets: ['react', 'es2015']
 			}
 		}]
-	}
+	},
+  externals: {
+    'Config': JSON.stringify(process.env.ENV === 'PRODUCTION' ? require('./configs/prod.json') : require('./configs/dev.json'))
+  }
 };

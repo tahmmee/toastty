@@ -130,6 +130,9 @@ class TestrunnerToolbar extends React.Component {
 		if (this.state.platform == 2){
 			platformName = "ubuntu14"
 		}
+		if (this.state.platform == 3){
+			platformName = "windows2012"
+		}
 		this.props.onStart(servers, build, toyBuild, platformName)
 	}
 
@@ -190,6 +193,7 @@ const PlatformSelector = (props) => (
 	>
 	<MenuItem value={1} primaryText="CentOS 7" />
 	<MenuItem value={2} primaryText="Ubuntu 14.04" />
+	<MenuItem value={3} primaryText="Windows 2012" />
 	</SelectField>
 );
 

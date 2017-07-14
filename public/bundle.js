@@ -16929,6 +16929,9 @@ var TestrunnerToolbar = function (_React$Component3) {
 			if (this.state.platform == 2) {
 				platformName = "ubuntu14";
 			}
+      if (this.state.platform == 3) {
+        platformName = "windows2012";
+      }
 			this.props.onStart(servers, build, toyBuild, platformName);
 		}
 	}, {
@@ -17000,7 +17003,8 @@ var PlatformSelector = function PlatformSelector(props) {
 		},
 		_react2.default.createElement(_MenuItem2.default, { value: 1, primaryText: 'CentOS 7' }),
 		_react2.default.createElement(_MenuItem2.default, { value: 2, primaryText: 'Ubuntu 14.04' })
-	);
+	  _react2.default.createElement(_MenuItem2.default, { value: 3, primaryText: 'Windows 2012' })
+  );
 };
 
 var ConsoleCard = function (_React$Component4) {

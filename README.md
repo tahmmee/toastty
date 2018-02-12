@@ -1,9 +1,15 @@
-## Start a host
-```bash
+
+## Build
+```
+git clone http://github.com/tahmmee/toastty
+cd docker
+docker build --no-cache -t toastty .
 go get github.com/yudai/gotty
 go install github.com/yudai/gotty
-docker build -t toastty .
+```
 
+## Start a host
+```bash
 # host via gotty on port 7021
 gotty -w -p 7021 --permit-arguments --title-format "ToastTY - {{ .Command }} ({{ .Hostname }})" docker run -it toastty 172.34.17.339:2375
 ```
